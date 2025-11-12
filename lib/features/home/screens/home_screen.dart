@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,7 +13,11 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         leading: null,
         centerTitle: false,
-        title: Text('Camera test task'),
+        toolbarHeight: 100.h,
+        title: Text(
+          'Camera test task',
+          style: AppTextStyles.appBarPrimary.copyWith(color: AppColors.black),
+        ),
       ),
     );
   }
