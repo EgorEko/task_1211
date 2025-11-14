@@ -4,6 +4,12 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Camera test task App requires Camera access to take photos</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Camera test task App requires Photos access to save photos or videos</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Camera test task App requires Photos access to edit photos or videos</string>
 	<key>CFBundleDisplayName</key>
 	<string>Task 1211</string>
 	<key>CFBundleExecutable</key>
