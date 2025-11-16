@@ -15,6 +15,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../permisions/utils/camera_service.dart';
 import '../blocs/camera_cubit/camera_cubit.dart';
 import '../blocs/camera_cubit/camera_state.dart';
+import '../blocs/overlay_cubit/custom_overlay_cubit.dart';
 import '../widgets/icon_button_widget.dart';
 import '../widgets/video_record_button_widget.dart';
 
@@ -43,9 +44,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          CameraCubit(cameraService: _cameraService)..initCamera(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) =>
+              CameraCubit(cameraService: _cameraService)..initCamera(),
+        ),
+        BlocProvider(create: (_) => CustomOverlayCubit()),
+      ],
       child: const _HomeScreenContent(),
     );
   }
@@ -143,6 +149,7 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
                     ),
                   ),
                   Positioned(
+                    top: 20.h,
                     right: 16.w,
                     child: IconButton(
                       icon: Icon(Icons.close, size: 32.sp, color: Colors.black),
@@ -218,6 +225,22 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
                       ),
                     ),
                   ),
+                  BlocBuilder<CustomOverlayCubit, CustomOverlayState>(
+                    builder: (context, overlayState) {
+                      if (overlayState.image == null) {
+                        return const SizedBox.shrink();
+                      }
+                      return Positioned.fill(
+                        child: Opacity(
+                          opacity: 0.2,
+                          child: Image.file(
+                            overlayState.image!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                   if (isRecording)
                     Positioned(
                       top: 20.h,
@@ -266,7 +289,9 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
                             icon: Icons.redo,
                           ),
                           IconButtonWidget(
-                            onPressed: () {},
+                            onPressed: () => context
+                                .read<CustomOverlayCubit>()
+                                .pickOverlayImage(),
                             icon: Icons.add_circle_outline,
                           ),
                           Spacer(flex: 2),

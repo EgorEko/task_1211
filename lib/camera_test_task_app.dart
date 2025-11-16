@@ -11,7 +11,7 @@ class CameraTestTaskApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(395, 812),
+      designSize: const Size(380, 812),
       child: MaterialApp.router(
         title: 'Camera test task',
         theme: ThemeData(
