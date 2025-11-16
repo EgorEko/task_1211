@@ -10,6 +10,8 @@
     <string>Camera test task App requires Photos access to save photos or videos</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Camera test task App requires Photos access to edit photos or videos</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Camera test task App requires Photos access to record audio</string>
 	<key>CFBundleDisplayName</key>
 	<string>Task 1211</string>
 	<key>CFBundleExecutable</key>

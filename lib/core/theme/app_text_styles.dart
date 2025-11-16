@@ -6,4 +6,6 @@ abstract class AppTextStyles {
     fontSize: 30.sp,
     fontWeight: FontWeight.bold,
   );
+
+  static final timer = TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w400);
 }
