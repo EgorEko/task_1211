@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/blocs/permission_cubit/permission_cubit.dart';
@@ -61,13 +62,13 @@ class PermissionGuard extends StatelessWidget {
             if (state is PermissionInitial) {
               context.read<PermissionCubit>().checkCameraPermission();
             }
-            return const Scaffold(
+            return Scaffold(
               body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
-                    SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     Text('Checking permissions...'),
                   ],
                 ),

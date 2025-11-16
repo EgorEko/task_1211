@@ -16,8 +16,11 @@ import '../../permisions/utils/camera_service.dart';
 import '../blocs/camera_cubit/camera_cubit.dart';
 import '../blocs/camera_cubit/camera_state.dart';
 import '../blocs/overlay_cubit/custom_overlay_cubit.dart';
-import '../widgets/icon_button_widget.dart';
-import '../widgets/video_record_button_widget.dart';
+import '../widgets/section_widgets/bottom_panel_section_widget.dart';
+import '../widgets/section_widgets/camera_image_selected_section_widget.dart';
+import '../widgets/section_widgets/error_section_widget.dart';
+import '../widgets/section_widgets/indicator_section_widget.dart';
+import '../widgets/section_widgets/video_recorded_section_widget.dart';
 
 @RoutePage()
 class HomeScreen extends StatefulWidget {
@@ -70,6 +73,7 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
   @override
   void dispose() {
     _videoController?.dispose();
+    _videoController = null;
     super.dispose();
   }
 
@@ -128,69 +132,23 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
         body: BlocBuilder<CameraCubit, CameraState>(
           builder: (context, state) {
             if (state is CameraLoading || state is CameraInitial) {
-              return const Center(child: CircularProgressIndicator());
+              return IndicatorSectionWidget();
             }
             if (state is CameraError) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Text('Error: ${state.message}'),
-                ),
-              );
+              ErrorSectionWidget(errorMessage: state.message);
             }
             if (state is CameraImageSelected) {
-              return Stack(
-                children: [
-                  Center(
-                    child: Image.file(
-                      width: context.getWidth,
-                      height: context.getHeight,
-                      File(state.imageFile.path),
-                    ),
-                  ),
-                  Positioned(
-                    top: 20.h,
-                    right: 16.w,
-                    child: IconButton(
-                      icon: Icon(Icons.close, size: 32.sp, color: Colors.black),
-                      onPressed: () {
-                        context.read<CameraCubit>().initCamera();
-                      },
-                    ),
-                  ),
-                ],
+              return CameraImageSelectedSectionWidget(
+                imagePath: state.imageFile.path,
               );
             }
             if (state is VideoRecorded) {
               if (_videoController == null ||
                   !_videoController!.value.isInitialized) {
-                return const Center(child: CircularProgressIndicator());
+                return IndicatorSectionWidget();
               }
-              return Stack(
-                children: [
-                  SizedBox(
-                    width: context.getWidth,
-                    height: context.getHeight,
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                      child: SizedBox(
-                        width: _videoController!.value.size.width,
-                        height: _videoController!.value.size.height,
-                        child: VideoPlayer(_videoController!),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 20.h,
-                    right: 16.w,
-                    child: IconButton(
-                      icon: Icon(Icons.close, size: 32.sp, color: Colors.red),
-                      onPressed: () {
-                        context.read<CameraCubit>().initCamera();
-                      },
-                    ),
-                  ),
-                ],
+              return VideoRecordedSectionWidget(
+                videoController: _videoController!,
               );
             }
             if (state case CameraReady() || RecordingInProgress()) {
@@ -277,38 +235,9 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
                         ),
                       ),
                     ),
-                  Positioned(
-                    bottom: 16.h,
-                    child: SizedBox(
-                      width: context.getWidth,
-                      child: Row(
-                        children: [
-                          IconButtonWidget(
-                            onPressed: () =>
-                                context.read<CameraCubit>().switchCamera(),
-                            icon: Icons.redo,
-                          ),
-                          IconButtonWidget(
-                            onPressed: () => context
-                                .read<CustomOverlayCubit>()
-                                .pickOverlayImage(),
-                            icon: Icons.add_circle_outline,
-                          ),
-                          Spacer(flex: 2),
-                          VideoRecordButtonWidget(
-                            onTap: buttonAction,
-                            isRecording: isRecording,
-                          ),
-                          Spacer(flex: 2),
-                          IconButtonWidget(
-                            onPressed: () =>
-                                context.read<CameraCubit>().takePicture(),
-                            icon: Icons.image_outlined,
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                    ),
+                  BottomPanelSectionWidget(
+                    buttonAction: buttonAction,
+                    isRecording: isRecording,
                   ),
                 ],
               );
